@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Together 4 Youth</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+  <!-- Load Leaflet from CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet@3.0.2/dist/esri-leaflet.js"
+    integrity="sha512-myckXhaJsP7Q7MZva03Tfme/MSF5a6HC2xryjAM4FxPLHGqlh5VALCbywHnzs2uPoF/4G/QVXyYDDSkp5nPfig=="
+    crossorigin=""></script>
+
+  <!-- Geocoding Control -->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.css"
+  integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+  crossorigin="">
+  <script src="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.js"
+  integrity="sha512-enHceDibjfw6LYtgWU03hke20nVTm+X5CRi9ity06lGQNtC9GkBNl/6LoER6XzSudGiXy++avi1EbIg9Ip4L1w=="
+  crossorigin=""></script>
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <script src="js/formData.js" type="text/javascript"></script>
+  <script src="js/customFunctions.js" type="text/javascript"></script>
+</head>
+
+<body onload="fillStates(statesList)">
+  <h1>Together 4 Youth</h1>
+
+  <p>Select the school you represent from the lists below or by clicking on the map.</p>
+
+  <form>
+    <label for="ausState">Choose State or Territory:</label>
+    <select name="ausState" id="ausState"></select><br>
+    <label for="school">School name:</label>
+    <input type="text" id="fname" name="fname"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+
+  <div id="map"></div>
+  <div id="info-pane" class="leaflet-bar">Hover to inspect</div>
+
+  <script>
+    var map = L.map('map').setView([-27.8, 134.354], 4);
+    var labels = {};
+
+    var icon = L.icon({
+      iconUrl: 'images/school-solid.svg',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+      popupAnchor: [0, 32]
+    });
+
+    L.esri.basemapLayer('Gray').addTo(map);
+    L.esri.basemapLayer('GrayLabels').addTo(map);
+    L.control.scale().addTo(map);
+
+    // add LGAs
+    var nswLGA = L.esri.featureLayer({
+      url: 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/8',
+      simplifyFactor: 0.5,
+      precision: 5,
+      style: {color: 'white', weight: 3}
+    }).addTo(map);
+
+    nswLGA.on('mouseout', function (e) {
+      document.getElementById('info-pane').innerHTML = 'Hover to Inspect';
+    });
+
+    nswLGA.on('mouseover', function (e) {
+      document.getElementById('info-pane').innerHTML = e.layer.feature.properties.lganame;
+    });
+
+    // add Primary Schools
+    var school1 = L.esri.featureLayer({
+      url: 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Education_Facilities/FeatureServer/0',
+      pointToLayer: function (geojson, latlng) {
+        return L.marker(latlng, {
+          icon: icon
+        });
+      },
+      simplifyFactor: 0.5,
+      precision: 5
+    });
+
+    // add Combined Primary Secondary Schools
+    var school2 = L.esri.featureLayer({
+      url: 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Education_Facilities/FeatureServer/1',
+      simplifyFactor: 0.5,
+      precision: 5
+    });
+
+    // add High Schools
+    var school3 = L.esri.featureLayer({
+      url: 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Education_Facilities/FeatureServer/2',
+      simplifyFactor: 0.5,
+      precision: 5
+    });
+
+    // add Technical Colleges
+    var school4 = L.esri.featureLayer({
+      url: 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Education_Facilities/FeatureServer/4',
+      simplifyFactor: 0.5,
+      precision: 5
+    });
+
+    // add Universities
+    var school5 = L.esri.featureLayer({
+      url: 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Education_Facilities/FeatureServer/5',
+      simplifyFactor: 0.5,
+      precision: 5
+    });
+
+    map.on('zoomend ', function(e) { 
+      if ( map.getZoom() < 13 )
+        { map.removeLayer( school1 );
+          map.removeLayer( school2 );
+          map.removeLayer( school3 );
+          map.removeLayer( school4 );
+          map.removeLayer( school5 );
+        } 
+      else if ( map.getZoom() >= 13 )
+        { map.addLayer( school1 );
+          map.addLayer( school2 );
+          map.addLayer( school3 );
+          map.addLayer( school4 );
+          map.addLayer( school5 );
+        };
+      //console.log(map.getZoom()); 
+      });
+
+    school1.on('createfeature', function (e) {
+      var id = e.feature.id;
+      var feature = school1.getFeature(id);
+      var center = feature.getLatLng();
+      var label = L.marker(center, {
+        icon: L.divIcon({
+          iconSize: null,
+          className: 'label',
+          html: '<div>' + e.feature.properties.generalname + '</div>'
+        })
+      }).addTo(map);
+      labels[id] = label;
+    });
+    
+    school1.on('addfeature', function (e) {
+      var label = labels[e.feature.id];
+      if (label) {
+        label.addTo(map);
+      }
+    });
+
+    school1.on('removefeature', function (e) {
+      var label = labels[e.feature.id];
+      if (label) {
+        map.removeLayer(label);
+      }
+    });
+
+  </script>
+
+  <p>Icons sourced from <a href="https://fontawesome.com/license/free" target="_blank">www.fontawesome.com</a></p>
+
+</body>
+</html>
