@@ -43,17 +43,27 @@ var providerServices = [
 ];
 
 function fillStates(statesList) {
-    var stateSelect = "";
+    var stateSelect = '';
     statesList.forEach(item => {
         stateSelect += "<option value=" + item.abbreviation + ">" + item.name + "</option>";
     });
     document.getElementById("ausState").innerHTML = stateSelect;
 }
 
+/*
 function fillServices(providerServices) {
     var providerSelect = "";
     providerServices.forEach(item => {
         providerSelect += '<label><input type="checkbox" id=' + item.id + "name=" + item.id + ">" + item.name + "</label>";
     });
     document.getElementById("providerService").innerHTML = providerSelect;
+}
+*/
+
+function submitRequest() {
+    var form = document.getElementById('requestForm');
+    form.style.display = 'none';
+    var processing = document.createElement('span');
+    processing.appendChild(document.createTextNode('Your request has been submitted.  You will be contacted within 5 business days.'));
+    form.parentNode.insertBefore(processing, form);
 }

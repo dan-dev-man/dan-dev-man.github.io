@@ -35,15 +35,46 @@
 
   <p>Select the school you represent from the lists below or by clicking on the map.</p>
 
-  <form>
+  <form id="requestForm">
     <label for="ausState">Choose State or Territory:</label>
     <select name="ausState" id="ausState"></select><br>
     <label for="school">School name:</label>
-    <input type="text" id="fname" name="fname"><br><br>
-    <div id="providerService"></div><br>
-    <input type="submit" value="Submit">
+    <input type="text" id="school" name="school"><br><br>
+    <label>Select a service:</label>
+    <div>
+      <input type="checkbox" id="service1" name="service1" value="Service 1">
+      <label for="service1">Service 1</label>
+    </div>
+    <div>
+      <input type="checkbox" id="service2" name="service2" value="Service 2">
+      <label for="service2">Service 2</label>
+    </div>
+    <div>
+      <input type="checkbox" id="service3" name="service3" value="Service 3">
+      <label for="service3">Service 3</label>
+    </div>
+    <div>
+      <input type="checkbox" id="service4" name="service4" value="Service 4">
+      <label for="service4">Service 4</label>
+    </div>
+    <div>
+      <input type="checkbox" id="service5" name="service5" value="Service 5">
+      <label for="service5">Service 5</label>
+    </div>
+    <div>
+      <input type="checkbox" id="service6" name="service6" value="Service 6">
+      <label for="service6">Service 6</label>
+    </div>
+    <br>
+    <label for="school">Contact name:</label>
+    <input type="text" id="contactName" name="contactName"><br>
+    <label for="school">Email:</label>
+    <input type="text" id="contactEmail" name="contactEmail"><br>
+    <label for="school">Phone number:</label>
+    <input type="text" id="contactPhone" name="contactPhone"><br>
+    <input type="submit" value="Submit" onClick="submitRequest()"><br>
   </form>
-
+  <br>
   <div id="map"></div>
   <div id="info-pane" class="leaflet-bar">Hover to inspect</div>
 
