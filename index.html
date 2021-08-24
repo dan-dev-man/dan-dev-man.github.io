@@ -33,9 +33,8 @@
 <body onload="fillStates(statesList)">
   <h1>Together 4 Youth</h1>
 
-  <p>Select the school you represent from the lists below or by clicking on the map.</p>
-
   <form id="requestForm">
+    <label>Select the school you represent from the lists below or by clicking on the map.</label><br><br>
     <label for="ausState">Choose State or Territory:</label>
     <select name="ausState" id="ausState"></select><br>
     <label for="school">School name:</label>
@@ -72,7 +71,7 @@
     <input type="text" id="contactEmail" name="contactEmail"><br>
     <label for="school">Phone number:</label>
     <input type="text" id="contactPhone" name="contactPhone"><br>
-    <input type="submit" value="Submit" onClick="submitRequest()"><br>
+    <input type="button" value="Submit" onClick="submitRequest()"><br>
   </form>
   <br>
   <div id="map"></div>
@@ -197,7 +196,7 @@
 
   </script>
 
-  <p>Icons sourced from <a href="https://fontawesome.com/license/free" target="_blank">www.fontawesome.com</a></p>
+  <p><i>Icons sourced from <a href="https://fontawesome.com/license/free" target="_blank">www.fontawesome.com</a></i></p>
 
 </body>
 </html>
